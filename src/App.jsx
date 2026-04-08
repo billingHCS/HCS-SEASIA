@@ -149,8 +149,7 @@ function exportToCSV(verts) {
       ]);
     });
   });
-  const csv  = rows.map(r => r.join(",")).join("
-");
+  const csv  = rows.map(r => r.join(",")).join("\n");
   const blob = new Blob([csv], { type: "text/csv" });
   const url  = URL.createObjectURL(blob);
   const a    = document.createElement("a");
@@ -250,28 +249,29 @@ export default function App() {
   const overallPct = totalTasks ? Math.round((doneTasks / totalTasks) * 100) : 0;
 
   const today = new Date().toLocaleDateString("en-US",{weekday:"short",month:"short",day:"numeric",year:"numeric"}).toUpperCase();
-
   const STATUS_FILTERS = ["All", "To Do", "In Progress", "Done", "Blocked", "Overdue"];
+
+  const CSS = [
+    "@import url('https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@500;600;700&family=Barlow:wght@400;500;600&display=swap');",
+    "* { box-sizing:border-box; margin:0; padding:0; }",
+    ".row:hover { background:rgba(255,255,255,0.04) !important; }",
+    ".row:hover .del { opacity:1 !important; }",
+    ".drag-handle { cursor:grab; opacity:0.3; font-size:14px; padding:0 4px; user-select:none; }",
+    ".drag-handle:hover { opacity:0.8; }",
+    ".vert-card { background:#0a0a0a; border-radius:6px; overflow:hidden; display:flex; flex-direction:column; }",
+    ".filter-btn { background:transparent; border:1px solid #222; color:#666; padding:4px 10px; border-radius:3px; cursor:pointer; font-family:'Barlow Condensed'; font-size:11px; font-weight:700; letter-spacing:0.08em; transition:all 0.15s; }",
+    ".filter-btn.active { color:#fff; border-color:#4af0c4; background:rgba(74,240,196,0.1); }",
+    ".filter-btn:hover { border-color:#555; color:#aaa; }",
+    ".add-vert-btn { background:transparent; border:1px dashed #333; color:#555; padding:8px 18px; border-radius:4px; cursor:pointer; font-family:'Barlow Condensed'; font-size:12px; font-weight:700; letter-spacing:0.1em; transition:all 0.2s; white-space:nowrap; }",
+    ".add-vert-btn:hover { border-color:#4af0c4; color:#4af0c4; }",
+    ".export-btn { background:transparent; border:1px solid #333; color:#666; padding:6px 14px; border-radius:3px; cursor:pointer; font-family:'Barlow Condensed'; font-size:11px; font-weight:700; letter-spacing:0.1em; transition:all 0.15s; }",
+    ".export-btn:hover { border-color:#3de8ff; color:#3de8ff; }",
+    "@media (max-width:900px) { .vert-grid { grid-template-columns:1fr !important; } .header-row { flex-direction:column; gap:12px; align-items:flex-start !important; } }",
+  ].join("\n");
 
   return (
     <div style={{ minHeight:"100vh", background:"#000", padding:"28px 22px", fontFamily:"'Barlow', sans-serif" }}>
-      <style>{`
-        @import url('https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@500;600;700&family=Barlow:wght@400;500;600&display=swap');
-        * { box-sizing:border-box; margin:0; padding:0; }
-        .row:hover { background:rgba(255,255,255,0.04) !important; }
-        .row:hover .del { opacity:1 !important; }
-        .drag-handle { cursor:grab; opacity:0.3; font-size:14px; padding:0 4px; user-select:none; }
-        .drag-handle:hover { opacity:0.8; }
-        .vert-card { background:#0a0a0a; border-radius:6px; overflow:hidden; display:flex; flex-direction:column; }
-        .filter-btn { background:transparent; border:1px solid #222; color:#666; padding:4px 10px; border-radius:3px; cursor:pointer; font-family:'Barlow Condensed'; font-size:11px; font-weight:700; letter-spacing:0.08em; transition:all 0.15s; }
-        .filter-btn.active { color:#fff; border-color:#4af0c4; background:rgba(74,240,196,0.1); }
-        .filter-btn:hover { border-color:#555; color:#aaa; }
-        .add-vert-btn { background:transparent; border:1px dashed #333; color:#555; padding:8px 18px; border-radius:4px; cursor:pointer; font-family:'Barlow Condensed'; font-size:12px; font-weight:700; letter-spacing:0.1em; transition:all 0.2s; white-space:nowrap; }
-        .add-vert-btn:hover { border-color:#4af0c4; color:#4af0c4; }
-        .export-btn { background:transparent; border:1px solid #333; color:#666; padding:6px 14px; border-radius:3px; cursor:pointer; font-family:'Barlow Condensed'; font-size:11px; font-weight:700; letter-spacing:0.1em; transition:all 0.15s; }
-        .export-btn:hover { border-color:#3de8ff; color:#3de8ff; }
-        @media (max-width:900px) { .vert-grid { grid-template-columns:1fr !important; } .header-row { flex-direction:column; gap:12px; align-items:flex-start !important; } }
-      `}</style>
+      <style dangerouslySetInnerHTML={{ __html: CSS }} />
 
       <div className="header-row" style={{ display:"flex", justifyContent:"space-between", alignItems:"flex-start", marginBottom:"28px", flexWrap:"wrap", gap:"12px" }}>
         <div>
